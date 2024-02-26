@@ -1,0 +1,4 @@
+(executable
+ (public_name tinylc)
+ (name main)
+ (libraries tinylc))

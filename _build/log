@@ -1,0 +1,6 @@
+# dune init proj tinylc
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /home/exaclior/.cache/dune/db
+# Workspace root: /home/exaclior/projects/tinylc
+# Auto-detected concurrency: 32

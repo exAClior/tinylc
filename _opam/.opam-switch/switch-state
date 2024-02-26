@@ -1,0 +1,13 @@
+opam-version: "2.0"
+compiler: ["ocaml.5.1.0"]
+roots: ["ocaml.5.1.0"]
+installed: [
+  "base-bigarray.base"
+  "base-domains.base"
+  "base-nnp.base"
+  "base-threads.base"
+  "base-unix.base"
+  "ocaml.5.1.0"
+  "ocaml-config.3"
+  "ocaml-system.5.1.0"
+]

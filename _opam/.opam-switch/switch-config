@@ -1,0 +1,13 @@
+opam-version: "2.0"
+synopsis: "/home/exaclior/projects/tinylc"
+opam-root: "/home/exaclior/.opam"
+invariant: [
+  "ocaml" {>= "4.05.0"}
+]
+paths {
+  
+}
+variables {
+  user: "exaclior"
+  group: "exaclior"
+}
