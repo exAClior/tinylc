@@ -1,5 +1,6 @@
 (* following https://dev.to/chshersh/learn-lambda-calculus-in-10-minutes-with-ocaml-56ba *)
 
+#require "angstrom";;
 open Angstrom
 
 type expr =
@@ -12,7 +13,19 @@ let rec pretty_print t = match t with
   | App (t1, t2) -> "(" ^ (pretty_print t1) ^ " " ^ (pretty_print t2) ^ ")"
   | Lam (x, t) -> "λ" ^ x ^ "." ^ (pretty_print t)
 
-let parens_p p = char '(' *> p <* char ')'
+let is_left_param = function
+  | '(' -> true
+  | _   -> false
+
+let is_right_param = function
+  | ')' -> true
+  | _   -> false
+
+let left_param = take_while1 is_left_param
+
+let right_param = take_while1 is_right_param
+
+let parens_p p = char '(' *> p <* char ')' 
 
 let name_p =
   take_while1 (function 'a' .. 'z' -> true | _ -> false)
@@ -44,7 +57,6 @@ let parse str =
   | Ok expr   -> Printf.printf "Success: %s\n%!" (pretty_print expr)
   | Error msg -> failwith msg
 
-let () = parse "λx.x"
 
 (* let () = let t = App (Lam ("x", Var "x"), Var "y") in *)
 (*          print_endline (pretty_print t) *)

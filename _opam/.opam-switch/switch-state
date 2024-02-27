@@ -72,3 +72,4 @@ installed: [
   "xdg.3.14.0"
   "zed.3.2.3"
 ]
+pinned: "angstrom.0.16.0"
