@@ -11,52 +11,21 @@ type expr =
 let rec pretty_print t = match t with
   | Var x -> x
   | App (t1, t2) -> "(" ^ (pretty_print t1) ^ " " ^ (pretty_print t2) ^ ")"
-  | Lam (x, t) -> "λ" ^ x ^ "." ^ (pretty_print t)
+  | Lam (x, t0) -> "λ" ^ x ^ "." ^ (pretty_print t0)
 
-let is_left_param = function
-  | '(' -> true
-  | _   -> false
+let rec alpha_conversion t x y = match t with
+  | Var z -> Var y
+  | App (t1, t2) -> App (alpha_conversion t1 x y, alpha_conversion t2 x y)
+  | Lam (z, t0) -> if z = x then Lam (z, alpha_conversion t0 x y) else Lam (z, t0)
 
-let is_right_param = function
-  | ')' -> true
-  | _   -> false
+(* let rec beta_reduction t x = match t with
+  | Var y -> if x = y then s else Var y
+  | App (t1, t2) -> App (t1, t2)
+  | Lam (y, t) -> if x = y then Lam (y, t) else Lam (y, beta_reduction t x s) *)
 
-let left_param = take_while1 is_left_param
+let () = let lc = App (Lam ("x", Var "x"), Var "y") in
+      let lc_alpha = alpha_conversion lc "x" "y" in
+      print_endline (pretty_print lc_alpha)
 
-let right_param = take_while1 is_right_param
-
-let parens_p p = char '(' *> p <* char ')' 
-
-let name_p =
-  take_while1 (function 'a' .. 'z' -> true | _ -> false)
-
-let var_p = name_p >>| (fun name -> Var name)
-
-let app_p expr_p =
-  let ( let* ) = (>>=) in
-  let* l = parens_p expr_p in
-  let* _ = char ' ' in
-  let* r = parens_p expr_p in
-  return (App (l, r))
-
-let lam_p expr_p =
-  let ( let* ) = (>>=) in
-  let* _ = string "λ" in
-  let* var = name_p in
-  let* _ = char '.' in
-  let* body = parens_p expr_p in
-  return (Lam (var, body))
-
-let expr_p: expr t =
-  fix (fun expr_p ->
-    var_p <|> app_p expr_p <|> lam_p expr_p <|> parens_p expr_p
-  )
-
-let parse str =
-  match parse_string ~consume:All expr_p str with
-  | Ok expr   -> Printf.printf "Success: %s\n%!" (pretty_print expr)
-  | Error msg -> failwith msg
-
-
-(* let () = let t = App (Lam ("x", Var "x"), Var "y") in *)
-(*          print_endline (pretty_print t) *)
+let () = let t = App (Lam ("x", Var "x"), Var "y") in 
+          print_endline (pretty_print t)
